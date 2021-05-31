@@ -1,6 +1,7 @@
 exports = async function(arg) {
   const data = arg.data;
-  const runnerId = arg.fullRow[arg.header.indexOf('_id')];
+  console.log(JSON.stringify(arg));
+  const runnerId = data[arg.row - 1][arg.header.indexOf('_id')];
   const key = arg.header[arg.column - 1];
   const value = arg.value;
 
