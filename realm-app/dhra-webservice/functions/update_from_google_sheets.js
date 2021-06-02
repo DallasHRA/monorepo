@@ -1,8 +1,9 @@
 exports = async function(arg) {
   const data = arg.data;
   console.log(JSON.stringify(arg));
-  const runnerId = data[arg.row - 1][arg.header.indexOf('_id')];
-  const key = arg.header[arg.column - 1];
+  const runner = data[arg.index]
+  const runnerId = runner._id;
+  const key = arg.key;
   const value = arg.value;
 
   let collection = context.services
@@ -13,7 +14,15 @@ exports = async function(arg) {
   let update = { $set: {} }
   update['$set'][key] = value
 
-  const result = (await collection.updateOne({"_id": BSON.ObjectId(runnerId)}, update));
+  let result;
+  if (runner._id !== "") {
+    result =
+      (await collection.updateOne({"_id": BSON.ObjectId(runnerId)}, update));
+  } else if (runner.number !== "") {
+    delete runner._id;
+    result = (await collection.insertOne(runner))
+  }
+
 
 
   console.log(JSON.stringify(result))

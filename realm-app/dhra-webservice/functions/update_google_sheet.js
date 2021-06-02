@@ -3,8 +3,10 @@ exports = async function(changeEvent) {
 
   function getPrivateKey(context) {
     const key = context.values.get('google_json_no_priv');
+    key["private_key_id"] = context.values.get('google_private_key_id_val');
     key["private_key"] =
-      decodeURIComponent(context.values.get('GSheetsPrivateKeyVal'))
+      decodeURIComponent(context.values.get('google_private_key_val'))
+    console.log(key["private_key"])
     return key;
   }
 
@@ -33,7 +35,7 @@ exports = async function(changeEvent) {
   }
 
   async function getSheet({jwtClient}) {
-    let spreadsheetId = context.values.get('fieldAgentSheetId');
+    let spreadsheetId = context.values.get('field_agent_sheet_id');
     let range = 'FieldAgents!A1:Z'
     const sheets = google.sheets('v4');
     const results =  (await sheets.spreadsheets.values.get({
@@ -65,6 +67,7 @@ exports = async function(changeEvent) {
     matches = oldRange.match(rowNumRegex)
     const row = getSheetIndexById(oldRange, oldValues, id);
     if (matches) {
+      console.log(`${matches[1]}${row}:${matches[3]}${row}`)
       return `${matches[1]}${row}:${matches[3]}${row}`;
     } else {
       return null;

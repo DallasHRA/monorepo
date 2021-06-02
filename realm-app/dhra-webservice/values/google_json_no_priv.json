@@ -7,7 +7,6 @@
         "client_email": "mongodb-realm@dhra-runner-dev.iam.gserviceaccount.com",
         "client_id": "106140200069677104329",
         "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/mongodb-realm%40dhra-runner-dev.iam.gserviceaccount.com",
-        "private_key_id": "da86b6c52367d9d262fa571c555237d3a005bb6e",
         "project_id": "dhra-runner-dev",
         "token_uri": "https://oauth2.googleapis.com/token",
         "type": "service_account"

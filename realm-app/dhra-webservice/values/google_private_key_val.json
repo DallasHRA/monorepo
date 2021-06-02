@@ -1,0 +1,5 @@
+{
+    "name": "google_private_key_val",
+    "value": "google_private_key",
+    "from_secret": true
+}
