@@ -18,7 +18,24 @@ function getColumnStartAndEnd(range) {
   return {start: matches[1], end: matches[2]};
 }
 
-function addFieldRunners(runner) {
+function getById() {
+  var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  var data = spreadsheet.getSheetByName("FieldAgentsDev").getDataRange().createDeveloperMetadataFinder().onIntersectingLocations().withKey("mongoid").withValue("60a0c11a28e69a79579b0dd4").find()
+    data.map(r => {
+      let row = r.getLocation().getRow();
+      // let obj = loc.getLocationType() === SpreadsheetApp.DeveloperMetadataLocationType.COLUMN ?
+      //     {range: loc.getColumn().getA1Notation()} :
+      //     loc.getLocationType() === SpreadsheetApp.DeveloperMetadataLocationType.ROW ?
+      //         {range: loc.getRow().getA1Notation()} : {};
+    // obj[e.getKey()] = e.getValue();
+    console.log(row)
+    return row;
+  });
+
+  console.log(JSON.stringify(data));
+}
+
+global.addFieldRunners = function(runner) {
   const headerRows = 2
   var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
   var sheet = spreadsheet.getSheetByName("FieldAgentsDev");
@@ -52,21 +69,4 @@ function addFieldRunners(runner) {
   // }
 
   return JSON.stringify(inputData);
-}
-
-function getById() {
-  var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
-  var data = spreadsheet.getSheetByName("FieldAgentsDev").getDataRange().createDeveloperMetadataFinder().onIntersectingLocations().withKey("mongoid").withValue("60a0c11a28e69a79579b0dd4").find()
-    data.map(r => {
-      let row = r.getLocation().getRow();
-      // let obj = loc.getLocationType() === SpreadsheetApp.DeveloperMetadataLocationType.COLUMN ?
-      //     {range: loc.getColumn().getA1Notation()} :
-      //     loc.getLocationType() === SpreadsheetApp.DeveloperMetadataLocationType.ROW ?
-      //         {range: loc.getRow().getA1Notation()} : {};
-    // obj[e.getKey()] = e.getValue();
-    console.log(row)
-    return row;
-  });
-
-  console.log(JSON.stringify(data));
 }
