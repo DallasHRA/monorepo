@@ -1,7 +1,8 @@
 {
     "name": "google_scopes",
     "value": [
-        "https://www.googleapis.com/auth/spreadsheets"
+        "https://www.googleapis.com/auth/spreadsheets",
+        "https://www.googleapis.com/auth/script.external_request"
     ],
     "from_secret": false
 }
