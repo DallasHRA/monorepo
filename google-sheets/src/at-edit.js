@@ -14,10 +14,10 @@ global.atEdit = function (e) {
   data = util.getRelevantRows(e, data, headerRows);
   var index = e.range.getRow() - headerRows - 1;
 
-  if (index <= 0) {
+  if (index < 0) {
     return;
   }
-  
+
   var action = "UPDATE";
 
   var payload = {
