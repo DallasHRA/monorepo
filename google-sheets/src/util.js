@@ -8,10 +8,19 @@ function makeDataArray(header, headerRows, data) {
 }
 
 function convertRunnerObjectToValueArray(header, runner) {
-  return header.map(key => runner[key] || "")
+  return header.map(key => {
+    if (!runner[key]) {
+      return "";
+    } else if (key == 'number') {
+      return formatPhoneNumber(domesticFormatStrategy, runner[key])
+    } else {
+      return runner[key]
+    }
+  });
 }
 
 function twilioFormatStrategy(digits) {
+  digits = digits.toString();
   let formatted = ''
   if (digits.length === 10) {
     formatted = '1' + digits;
@@ -62,14 +71,24 @@ function buildValidation(spreadsheet) {
   .build();
 }
 
-function addDataValidation(sheet, header, headerRows, validation) {
+function getColumnOfData(sheet, header, headerRows, column) {
   let range = sheet.getDataRange();
-  const validationRange = range.offset(
+  return range.offset(
     headerRows,
-    header.indexOf('state'),
+    header.indexOf(column),
     range.getNumRows() - headerRows,
     1
-  ).setDataValidation(validation);
+  );
+}
+
+function addDataValidation(sheet, header, headerRows, validation) {
+  getColumnOfData(sheet, header, headerRows, 'state').setDataValidation(validation);
+}
+
+function friendlyFormatNumbers(sheet, header, headerRows) {
+  const range = getColumnOfData(sheet, header, headerRows, 'number')
+  range.setValues(range.getValues()
+    .map(n => formatPhoneNumber(domesticFormatStrategy, n[0])));
 }
 
 module.exports = {
@@ -80,5 +99,6 @@ module.exports = {
   twilioFormatPhoneNumber: formatPhoneNumber.bind(null, twilioFormatStrategy),
   domesticFormatPhoneNumber: formatPhoneNumber.bind(null, domesticFormatStrategy),
   convertRunnerObjectToValueArray,
-  makeDataArray
+  makeDataArray,
+  friendlyFormatNumbers
 }

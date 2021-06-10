@@ -4,13 +4,21 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "login": "realm-cli login --api-key=\"$PUB_KEY\" --private-api-key=\"$PRIV_KEY\"",
+    "install-functions": "./helpers/collect-deps.sh",
+    "deploy": "realm-cli push --strategy=merge --include-dependencies",
+    "development": "dotenv-run-script --"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "googleapis": "^74.2.0",
+    "hash.js": "^1.1.7",
     "jsonwebtoken": "^8.5.1",
     "node-fetch": "^2.6.1"
+  },
+  "devDependencies": {
+    "dotenv-run-script": "^0.1.0"
   }
 }

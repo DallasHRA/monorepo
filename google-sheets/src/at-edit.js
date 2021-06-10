@@ -13,6 +13,11 @@ global.atEdit = function (e) {
   var data = util.makeDataArray(header, headerRows, range.getValues());
   data = util.getRelevantRows(e, data, headerRows);
   var index = e.range.getRow() - headerRows - 1;
+
+  if (index <= 0) {
+    return;
+  }
+  
   var action = "UPDATE";
 
   var payload = {
@@ -21,7 +26,11 @@ global.atEdit = function (e) {
       "data": data
     };
 
-    console.log(payload)
+  Logger.log(payload)
+
+  if (payload['_id'] === '' && payload.number === '') {
+    return { message: "no number, no id. nothing to upload." }
+  }
 
   const url = 'https://us-east-1.aws.webhooks.mongodb-realm.com/api/client/v2.0/app/dhra-webservice-usyzs/service/google-sheets-updater/incoming_webhook/update_from_google_sheet'
 
@@ -44,4 +53,6 @@ global.atEdit = function (e) {
     headerRows,
     util.buildValidation(spreadsheet)
   );
+
+  // util.friendlyFormatNumbers(sheet, header, headerRows);
 }

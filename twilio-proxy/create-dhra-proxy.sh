@@ -24,3 +24,10 @@ twilio api:proxy:v1:services:update \
     --out-of-session-callback-url https://63fc93a69e92.ngrok.io/out-of-session \
     --callback-url http://localhost:3000/proxy-callback \
     --intercept-callback-url https://63fc93a69e92.ngrok.io/proxy-intercept
+
+
+
+twilio api:serverless:v1:services:environments:create \
+    --service-sid ZS66ed7f5b95d0c412f7a932aadb15c952 \
+    --domain-suffix prod \
+    --unique-name production

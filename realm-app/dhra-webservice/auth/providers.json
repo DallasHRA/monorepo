@@ -3,19 +3,5 @@
         "name": "api-key",
         "type": "api-key",
         "disabled": false
-    },
-    "oauth2-google": {
-        "name": "oauth2-google",
-        "type": "oauth2-google",
-        "config": {
-            "clientId": "287374227953-t0s68dlg4md91dmosdmi77pk9mv2u0ms.apps.googleusercontent.com"
-        },
-        "secret_config": {
-            "clientSecret": "googleclientsecret"
-        },
-        "disabled": true,
-        "redirect_uris": [
-            "https://us-east-1.aws.stitch.mongodb.com/api/client/v2.0/auth/callback"
-        ]
     }
 }
