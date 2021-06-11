@@ -11,7 +11,7 @@ exports = async function(arg) {
     const query = {'_id': BSON.ObjectId(runner['_id'])};
     const update = Object.assign({}, runner);
     delete update['_id'];
-    const result = (await collection.updateOne(query, update));
+    const result = (await collection.updateOne(query, {$set: update}));
     return runner;
   }
   

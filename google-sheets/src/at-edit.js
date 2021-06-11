@@ -1,10 +1,13 @@
 const util = require('./util');
 require('./webservice.com.js');
+const onScheduleEdit = require('./on-schedule-edit').onScheduleEdit;
 
-global.atEdit = function (e) {
-  var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
-  var sheet = spreadsheet.getSheetByName("FieldAgents");
+function onFieldAgentsEdit(e, spreadsheet, sheet) {
   var headerRows = 2;  // Number of rows of header info (to skip)
+
+  if (e.range.getRow() - headerRows - 1 < 0) {
+    return;
+  }
 
   var range = sheet.getDataRange(); // determine the range of populated data
   var numRows = range.getNumRows(); // get the number of rows in the range
@@ -12,16 +15,12 @@ global.atEdit = function (e) {
   var header = range.getValues()[0];
   var data = util.makeDataArray(header, headerRows, range.getValues());
   data = util.getRelevantRows(e, data, headerRows);
-  var index = e.range.getRow() - headerRows - 1;
 
-  if (index < 0) {
-    return;
-  }
 
   var action = "UPDATE";
 
   var payload = {
-      "action": "UPDATE",
+      "action": action,
       "header": header,
       "data": data
     };
@@ -53,6 +52,45 @@ global.atEdit = function (e) {
     headerRows,
     util.buildValidation(spreadsheet)
   );
+}
 
-  // util.friendlyFormatNumbers(sheet, header, headerRows);
+function makeReq(payload) {
+  const url = 'https://us-east-1.aws.webhooks.mongodb-realm.com/api/client/v2.0/app/dhra-webservice-usyzs/service/google-sheets-updater/incoming_webhook/update_from_google_sheet'
+
+  const options = {
+    method: 'post',
+    contentType: 'application/json',
+    payload: JSON.stringify(payload)
+  }
+
+  var response = UrlFetchApp.fetch(url, options);
+  Logger.log(response.getContentText());
+  return response;
+}
+
+global.atEdit = function (e) {
+  const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  const sheet = spreadsheet.getActiveSheet();
+  let payload;
+  if (sheet.getName() === 'FieldAgents') {
+    payload = onFieldAgentsEdit(e, spreadsheet, sheet);
+  } else if (sheet.getName() === 'Schedule') {
+    payload = onScheduleEdit(spreadsheet, sheet);
+  }
+
+  const response = makeReq(payload)
+  var respArr = JSON.parse(response.getContentText());
+
+  if (sheet.getName() === 'FieldAgents') {
+    const insertRange = util.getInsertRange(sheet, header, e)
+      .setValues(
+        respArr.map((runner => util.convertRunnerObjectToValueArray(header, runner)))
+    );
+    util.addDataValidation(
+      sheet,
+      header,
+      headerRows,
+      util.buildValidation(spreadsheet)
+    );
+  }
 }
