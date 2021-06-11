@@ -11,7 +11,7 @@ exports = async function(changeEvent) {
   }
 
   function getDocument(changeEvent) {
-    return Promise.resolve({doc: changeEvent.fullDocument})
+    return Promise.resolve({doc: changeEvent.fullDocument, changeEvent })
   }
 
   function getPrivateKey(context) {
@@ -79,7 +79,7 @@ exports = async function(changeEvent) {
     };
     console.log("OPTIONS:", JSON.stringify(options));
 
-    const response = await fetch('https://script.googleapis.com/v1/scripts/AKfycbwq3s9ZZilMqSKIorUDbldEfU5WJw8WNM29Qh8RgiefWfem8EZ8sZzY1RuRS9jkFNfKvQ:run', options);
+    const response = await fetch('https://script.googleapis.com/v1/scripts/AKfycbyKDiAwHMO77-evhxHA2mdswGYh_S_QTbgDXVcVnhEpDOkLjs67Xiyj00RoYgQUBHurpw:run', options);
     return response.json();
   }
 

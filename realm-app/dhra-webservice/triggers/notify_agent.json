@@ -1,0 +1,22 @@
+{
+    "name": "notify_agent",
+    "type": "DATABASE",
+    "config": {
+        "operation_types": [
+            "UPDATE",
+            "REPLACE",
+            "INSERT",
+            "DELETE"
+        ],
+        "database": "DHRA_PROXY",
+        "collection": "fieldAgents",
+        "service_name": "mongodb-atlas",
+        "match": {},
+        "project": {},
+        "full_document": true,
+        "full_document_before_change": true,
+        "unordered": true
+    },
+    "function_name": "notify_runner",
+    "disabled": false
+}

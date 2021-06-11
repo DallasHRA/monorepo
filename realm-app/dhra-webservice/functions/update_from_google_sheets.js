@@ -23,7 +23,16 @@ exports = async function(arg) {
     return insert;
   }
   
+  async function getAllRunners() {
+    const query = {};
+    return collection.find(query).toArray();
+  }
+  
   const getResult = async () => {
+    if (arg.getAllRunners === true) {
+      return getAllRunners();
+    }
+    
     return Promise.all(data.map(async (runner) => {
         if (runner['_id'] !== '') {
           return updateRunner(runner); 

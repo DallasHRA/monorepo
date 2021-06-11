@@ -1,6 +1,7 @@
 {
     "values": {
         "database_name": "DHRA_PROXY",
+        "twilio_base_api": "https://dhra-twilio-proxy-1741-dev.twil.io",
         "update_base_api_url": "https://script.googleapis.com/v1/scripts/",
         "update_path": "AKfycbyFbfpDmPAUIbAG-XYO0_7XPxXHpqyyf2VXreISRIxwzIM4oY8ym0r6WvW13_Pb_6YuKg:run"
     }
