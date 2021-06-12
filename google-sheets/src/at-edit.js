@@ -1,6 +1,8 @@
 const util = require('./util');
-require('./webservice.com.js');
+require('./edit-field-agents');
 const onScheduleEdit = require('./on-schedule-edit').onScheduleEdit;
+
+const REALM_API_KEY = process.env.REALM_API_KEY;
 
 function onFieldAgentsEdit(e, spreadsheet, sheet) {
   var headerRows = 2;  // Number of rows of header info (to skip)
@@ -20,6 +22,7 @@ function onFieldAgentsEdit(e, spreadsheet, sheet) {
   var action = "UPDATE";
 
   var payload = {
+      "api-key": REALM_API_KEY,
       "action": action,
       "header": header,
       "data": data

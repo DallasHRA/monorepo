@@ -1,6 +1,8 @@
 const path = require('path');
+const webpack = require('webpack')
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const GasPlugin = require('gas-webpack-plugin');
+const dotenv = require('dotenv');
 
 const getSrcPath = (filePath) => {
   const src = path.resolve(__dirname, 'src');
@@ -17,6 +19,9 @@ module.exports = {
     clean: true
   },
   plugins: [
+    new webpack.DefinePlugin({
+        'process.env': JSON.stringify(dotenv.config().parsed) // it will automatically pick up key values from .env file
+     }),
    new CopyWebpackPlugin({
      patterns: [
        {

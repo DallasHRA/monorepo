@@ -1,5 +1,7 @@
 const utils = require('./util')
 
+const REALM_API_KEY = process.env.REALM_API_KEY;
+
 function makeArrayFromData(keys, runner) {
   return keys.map(key => {
     if (key === 'number') {
@@ -22,11 +24,6 @@ function getById() {
   var data = spreadsheet.getSheetByName("FieldAgentsDev").getDataRange().createDeveloperMetadataFinder().onIntersectingLocations().withKey("mongoid").withValue("60a0c11a28e69a79579b0dd4").find()
     data.map(r => {
       let row = r.getLocation().getRow();
-      // let obj = loc.getLocationType() === SpreadsheetApp.DeveloperMetadataLocationType.COLUMN ?
-      //     {range: loc.getColumn().getA1Notation()} :
-      //     loc.getLocationType() === SpreadsheetApp.DeveloperMetadataLocationType.ROW ?
-      //         {range: loc.getRow().getA1Notation()} : {};
-    // obj[e.getKey()] = e.getValue();
     console.log(row)
     return row;
   });
@@ -71,7 +68,7 @@ global.addFieldRunners = function(runners) {
       return runner;
     });
 
-  Logger.log(JSON.stringify(inputData));
+  Logger.log(JSON.stringify({"api-key": REALM_API_KEY, inputData}));
 
   // let editRow = -1
   // let editAction = "appendRow"
@@ -95,5 +92,5 @@ global.addFieldRunners = function(runners) {
   //   updateRunner(headerRows + runnerRow + 1, runner);
   // }
 
-  return JSON.stringify(inputData);
+  return JSON.stringify({"api-key": REALM_API_KEY, inputData});
 }

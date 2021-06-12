@@ -1,0 +1,9 @@
+{
+    "name": "clockingin",
+    "type": "SCHEDULED",
+    "config": {
+        "schedule": "*/1 * * * *"
+    },
+    "function_name": "shift_change",
+    "disabled": false
+}
