@@ -2,8 +2,8 @@
     "name": "clockingin",
     "type": "SCHEDULED",
     "config": {
-        "schedule": "*/1 * * * *"
+        "schedule": "*/5 * * * *"
     },
     "function_name": "shift_change",
-    "disabled": false
+    "disabled": true
 }

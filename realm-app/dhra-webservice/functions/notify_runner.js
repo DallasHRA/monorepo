@@ -1,6 +1,9 @@
 exports = async function(changeEvent) {
   const fetch = require('node-fetch');
   
+  console.log(JSON.stringify(changeEvent.fullDocument));
+  console.log(JSON.stringify(changeEvent.fullDocumentBeforeChange));
+  
   function isStateUpdate(changeEvent) {
     return (changeEvent.fullDocument.state !== changeEvent.fullDocumentBeforeChange.state);
   }

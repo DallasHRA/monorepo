@@ -1,10 +1,5 @@
 [
     {
-        "name": "findall_oncall_or_default_runner",
-        "private": false,
-        "run_as_system": true
-    },
-    {
         "name": "findone_oncall_or_default_runner",
         "private": false,
         "run_as_system": true
@@ -16,10 +11,6 @@
     },
     {
         "name": "update_from_google_sheets",
-        "private": false
-    },
-    {
-        "name": "update_google_sheet",
         "private": true,
         "run_as_system": true
     },
@@ -29,16 +20,31 @@
         "run_as_system": true
     },
     {
-        "name": "auth_to_google_sheets",
-        "private": false
-    },
-    {
-        "name": "authenticate_to_edit_google_sheets",
+        "name": "findall_oncall_or_default_runner",
         "private": false,
         "run_as_system": true
     },
     {
         "name": "notify_runner",
+        "private": false,
+        "run_as_system": true
+    },
+    {
+        "name": "auth_to_google_sheets",
+        "private": false
+    },
+    {
+        "name": "shift_change",
+        "private": false,
+        "run_as_system": true
+    },
+    {
+        "name": "update_google_sheet",
+        "private": true,
+        "run_as_system": true
+    },
+    {
+        "name": "authenticate_to_edit_google_sheets",
         "private": false,
         "run_as_system": true
     }

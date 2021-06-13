@@ -1,6 +1,6 @@
 exports = async function(arg) {
   const data = arg.data;
-  console.log(JSON.stringify(arg));
+  console.log(arg);
   
   let collection = context.services
     .get("mongodb-atlas")
@@ -35,8 +35,10 @@ exports = async function(arg) {
     
     return Promise.all(data.map(async (runner) => {
         if (runner['_id'] !== '') {
+          console.log('insertRunner')
           return updateRunner(runner); 
         } else if (runner['_id'] === '' && runner['number'] !== '') {
+          console.log('updateRunner')
           return insertRunner(runner);
         }
       })

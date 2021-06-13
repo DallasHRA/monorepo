@@ -4,8 +4,8 @@
     "config": {
         "operation_types": [
             "UPDATE",
-            "REPLACE",
             "INSERT",
+            "REPLACE",
             "DELETE"
         ],
         "database": "DHRA_PROXY",
@@ -15,7 +15,7 @@
         "project": {},
         "full_document": true,
         "full_document_before_change": true,
-        "unordered": true
+        "unordered": false
     },
     "function_name": "notify_runner",
     "disabled": false
