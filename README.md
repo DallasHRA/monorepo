@@ -26,7 +26,7 @@ Go [here](https://github.com/DallasHRA/monorepo/issues) to log bugs.
 
 ## Coming Features
 
-* Integration with Google Sheets for scheduling
+* ~~Integration with Google Sheets for scheduling~~ DONE!
 * Voicemail obfuscation & delivery
 * RONA (Routed On No Answer)
 * Report a bad date line
