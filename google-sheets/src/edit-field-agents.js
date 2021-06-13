@@ -56,7 +56,6 @@ global.addFieldRunners = function(runners) {
   const inputData = runners
     .map(runner => makeArrayFromData(key, runner))
     .map(runner => {
-
       let editAction = "update"
       const row = getMatchingRowById(data, runner[0]) + headerRows + 1;
       if (row < headerRows + 1) {

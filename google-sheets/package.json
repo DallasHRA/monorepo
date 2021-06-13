@@ -21,5 +21,8 @@
     "jsonwebtoken": "^8.5.1",
     "webpack": "^5.38.1",
     "webpack-cli": "^4.7.2"
+  },
+  "dependencies": {
+    "realm": "^10.4.2"
   }
 }

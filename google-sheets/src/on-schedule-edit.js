@@ -44,9 +44,13 @@ module.exports = {
 
     console.log(runnersWithSched);
     return {
-      action: 'UPDATE',
-      header: ['name', 'number', 'schedule'],
-      data: runnersWithSched
+      method: 'POST',
+      contentType: 'application/json',
+      payload: {
+        action: 'UPDATE',
+        header: ['name', 'number', 'schedule'],
+        data: runnersWithSched
+      }
     };
   }
 }

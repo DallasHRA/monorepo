@@ -1,5 +1,6 @@
 const util = require('./util');
 require('./edit-field-agents');
+const {makereq} = require('./make-realm-request');
 const onScheduleEdit = require('./on-schedule-edit').onScheduleEdit;
 
 const REALM_API_KEY = process.env.REALM_API_KEY;
@@ -22,7 +23,6 @@ function onFieldAgentsEdit(e, spreadsheet, sheet) {
   var action = "UPDATE";
 
   var payload = {
-      "api-key": REALM_API_KEY,
       "action": action,
       "header": header,
       "data": data
@@ -30,48 +30,19 @@ function onFieldAgentsEdit(e, spreadsheet, sheet) {
 
   Logger.log(payload)
 
-  if (payload['_id'] === '' && payload.number === '') {
-    return { message: "no number, no id. nothing to upload." }
+  if (payload.data['_id'] === '' && payload.data.number === '') {
+    return undefined;
   }
 
-  const url = 'https://us-east-1.aws.webhooks.mongodb-realm.com/api/client/v2.0/app/dhra-webservice-usyzs/service/google-sheets-updater/incoming_webhook/update_from_google_sheet'
-
-  const options = {
-    method: 'post',
+  return options = {
+    method: 'POST',
     contentType: 'application/json',
-    payload: JSON.stringify(payload)
-  }
+    payload: payload
+  };
 
-  var response = UrlFetchApp.fetch(url, options);
-  Logger.log(response.getContentText());
-  var respArr = JSON.parse(response.getContentText())
-  const insertRange = util.getInsertRange(sheet, header, e)
-    .setValues(
-      respArr.map((runner => util.convertRunnerObjectToValueArray(header, runner)))
-  );
-  util.addDataValidation(
-    sheet,
-    header,
-    headerRows,
-    util.buildValidation(spreadsheet)
-  );
 }
 
-function makeReq(payload) {
-  const url = 'https://us-east-1.aws.webhooks.mongodb-realm.com/api/client/v2.0/app/dhra-webservice-usyzs/service/google-sheets-updater/incoming_webhook/update_from_google_sheet'
-
-  const options = {
-    method: 'post',
-    contentType: 'application/json',
-    payload: JSON.stringify(payload)
-  }
-
-  var response = UrlFetchApp.fetch(url, options);
-  Logger.log(response.getContentText());
-  return response;
-}
-
-global.atEdit = function (e) {
+global.atEdit = async function (e) {
   const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
   const sheet = spreadsheet.getActiveSheet();
   let payload;
@@ -81,19 +52,24 @@ global.atEdit = function (e) {
     payload = onScheduleEdit(spreadsheet, sheet);
   }
 
-  const response = makeReq(payload)
-  var respArr = JSON.parse(response.getContentText());
+  let header = sheet.getDataRange().getValues()[0];
 
-  if (sheet.getName() === 'FieldAgents') {
-    const insertRange = util.getInsertRange(sheet, header, e)
-      .setValues(
-        respArr.map((runner => util.convertRunnerObjectToValueArray(header, runner)))
-    );
-    util.addDataValidation(
-      sheet,
-      header,
-      headerRows,
-      util.buildValidation(spreadsheet)
-    );
-  }
+  makereq('update_from_google_sheet', payload)
+    .then(response => {
+      console.log("RESPONSE:", response);
+      var respArr = response.data;
+
+      if (sheet.getName() === 'FieldAgents') {
+        const insertRange = util.getInsertRange(sheet, header, e)
+          .setValues(
+            respArr.map((runner => util.convertRunnerObjectToValueArray(header, runner)))
+        );
+        util.addDataValidation(
+          sheet,
+          sheet.getDataRange().getValues()[0],
+          2,
+          util.buildValidation(spreadsheet)
+        );
+    }
+  })
 }
