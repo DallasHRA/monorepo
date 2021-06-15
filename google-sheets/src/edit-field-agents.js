@@ -19,21 +19,6 @@ function getColumnStartAndEnd(range) {
   return {start: matches[1], end: matches[2]};
 }
 
-function getById() {
-  var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
-  return spreadsheet.getSheetByName('FieldAgentsDev')
-    .getDataRange()
-    .createDeveloperMetadataFinder()
-    .onIntersectingLocations()
-    .withKey('mongoid')
-    .withValue('60a0c11a28e69a79579b0dd4').find()
-    .map(r => {
-      let row = r.getLocation().getRow();
-      console.log(row);
-      return row;
-    });
-}
-
 function getMatchingRowById(rows, runnerId) {
   return rows.reduce((acc, cur, i) => {
     if (cur[0] === runnerId) return i;
@@ -41,14 +26,33 @@ function getMatchingRowById(rows, runnerId) {
   }, -1);
 }
 
-global.addFieldRunners = function(runners) {
-  Logger.log(runners);
+function getRowById(sheet, keys, id) {
+  console.log(keys.indexOf('_id'));
+  const data = sheet.getDataRange().getValues();
+  console.log('data', data);
+  const row = data.map(row => row[(keys.indexOf('_id'))]);
+  console.log('row', row);
+  const rowNum = row.indexOf(id);
+  return rowNum + 1;
+}
+
+function onDelete(sheet, keys, id) {
+  sheet.deleteRow(getRowById(sheet, keys, id));
+}
+
+global.addFieldRunners = function(operation, id, runners) {
+  Logger.log(arguments);
+  Logger.log(id);
   const headerRows = 2;
   var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
   var sheet = spreadsheet.getSheetByName('FieldAgents');
   var range = sheet.getDataRange();
   var key = range.getValues()[0];
-
+  
+  if (operation.toLowerCase() === 'delete') {
+    onDelete(sheet, key, id);
+    return;
+  }
   var data = range.getValues().splice(2);
 
   Logger.log(JSON.stringify(runners));
