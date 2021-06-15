@@ -59,12 +59,17 @@ exports = async function(changeEvent) {
     return response.json()
   }
 
-  function buildReqBody(doc) {
-    const body = {
+  function buildParameters(change) {
+    console.log(JSON.stringify(change));
+    return [change.operationType, change.documentKey['_id'].toString(), change.fullDocument]; 
+  }
+
+  function buildReqBody(change) {
+    return {
       "function": "addFieldRunners",
-      "parameters": [[doc]]
-    }
-    return body;
+      "parameters": buildParameters(change),
+      "devMode": true
+    };
   }
 
   async function updateSheet({doc, access_token, token_type}) {
@@ -75,11 +80,11 @@ exports = async function(changeEvent) {
         ContentType: 'application/json',
         Authorization: `${token_type} ${access_token}`
       },
-      body: JSON.stringify(buildReqBody(changeEvent.fullDocument))
+      body: JSON.stringify(buildReqBody(changeEvent))
     };
     console.log("OPTIONS:", JSON.stringify(options));
 
-    const response = await fetch('https://script.googleapis.com/v1/scripts/AKfycbx2q0MqFMOJd2j-CacgFm43mtR32mKO8UTDeytJNTJ7888UkAOt_Gn7kW9OI1at0A:run', options);
+    const response = await fetch('https://script.googleapis.com/v1/scripts/AKfycbx5pAkcsNAUTOdMASjPFCruqu24LnUwJdd_DP88F-Oh:run', options);
     return response.json();
   }
 
