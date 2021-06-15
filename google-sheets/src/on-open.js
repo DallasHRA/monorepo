@@ -1,4 +1,5 @@
 const util = require('./util');
+const { makereq } = require('./make-realm-request');
 
 const REALM_API_KEY = process.env.REALM_API_KEY;
 
@@ -12,14 +13,8 @@ global.onOpen = async function (e) {
   var numRangeRows = range.getNumRows - headerRows
   range = range.offset(headerRows, 0);
 
-  var options = {
-    Authorization: `Bearer ${REALM_API_KEY}`
-  }
-try {
-  const user = await app.logIn(credentials);
-  console.log("Successfully logged in!", user.id);
-  return user;
-  } catch (err) {
-    console.error("Failed to log in", err.message);
-  }
+  const resp = await makereq('get_all_runners');
+  range.clear();
+  resp.map(runner => util.convertRunnerObjectToValueArray(header, runner))
+    .map(runner => sheet.appendRow(runner))
 }

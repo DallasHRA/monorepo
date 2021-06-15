@@ -1,32 +1,29 @@
 const util = require('./util');
-require('./edit-field-agents');
 const {makereq} = require('./make-realm-request');
 const onScheduleEdit = require('./on-schedule-edit').onScheduleEdit;
 
-const REALM_API_KEY = process.env.REALM_API_KEY;
+require('./edit-field-agents');
 
 function onFieldAgentsEdit(e, spreadsheet, sheet) {
-  var headerRows = 2;  // Number of rows of header info (to skip)
+  const  headerRows = 2;  // Number of rows of header info (to skip)
 
   if (e.range.getRow() - headerRows - 1 < 0) {
     return;
   }
 
   var range = sheet.getDataRange(); // determine the range of populated data
-  var numRows = range.getNumRows(); // get the number of rows in the range
-  var numColumns = range.getNumColumns();
   var header = range.getValues()[0];
   var data = util.makeDataArray(header, headerRows, range.getValues());
   data = util.getRelevantRows(e, data, headerRows);
 
 
-  var action = "UPDATE";
+  var action = 'UPDATE';
 
   var payload = {
-      "action": action,
-      "header": header,
-      "data": data
-    };
+    'action': action,
+    'header': header,
+    'data': data
+  };
 
   Logger.log(payload)
 
@@ -34,7 +31,7 @@ function onFieldAgentsEdit(e, spreadsheet, sheet) {
     return undefined;
   }
 
-  return options = {
+  return {
     method: 'POST',
     contentType: 'application/json',
     payload: payload
@@ -54,22 +51,19 @@ global.atEdit = async function (e) {
 
   let header = sheet.getDataRange().getValues()[0];
 
-  makereq('update_from_google_sheet', payload)
-    .then(response => {
-      console.log("RESPONSE:", response);
-      var respArr = response.data;
+  const response = await makereq('update_from_google_sheet', payload);
+  console.log('RESPONSE:', response);
 
-      if (sheet.getName() === 'FieldAgents') {
-        const insertRange = util.getInsertRange(sheet, header, e)
-          .setValues(
-            respArr.map((runner => util.convertRunnerObjectToValueArray(header, runner)))
-        );
-        util.addDataValidation(
-          sheet,
-          sheet.getDataRange().getValues()[0],
-          2,
-          util.buildValidation(spreadsheet)
-        );
-    }
-  })
-}
+  if (sheet.getName() === 'FieldAgents') {
+    util.getInsertRange(sheet, header, e)
+      .setValues(
+        response.map((runner => util.convertRunnerObjectToValueArray(header, runner)))
+      );
+    util.addDataValidation(
+      sheet,
+      sheet.getDataRange().getValues()[0],
+      2,
+      util.buildValidation(spreadsheet)
+    );
+  }
+};

@@ -16,6 +16,6 @@ module.exports = {
     console.log(`${URL_BASE}${path}`)
     console.log('RESP:', response.getContentText());
 
-    return Promise.resolve(response);
+    return JSON.parse(response.getContentText());
   }
 }

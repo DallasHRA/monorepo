@@ -1,12 +1,12 @@
 [
     {
         "name": "findone_oncall_or_default_runner",
-        "private": true,
+        "private": false,
         "run_as_system": true
     },
     {
         "name": "get_selection_function_name",
-        "private": true,
+        "private": false,
         "run_as_system": true
     },
     {
@@ -21,21 +21,21 @@
     },
     {
         "name": "findall_oncall_or_default_runner",
-        "private": true,
+        "private": false,
         "run_as_system": true
     },
     {
         "name": "notify_runner",
-        "private": true,
+        "private": false,
         "run_as_system": true
     },
     {
         "name": "auth_to_google_sheets",
-        "private": true
+        "private": false
     },
     {
         "name": "shift_change",
-        "private": true,
+        "private": false,
         "run_as_system": true
     },
     {
@@ -45,7 +45,7 @@
     },
     {
         "name": "authenticate_to_edit_google_sheets",
-        "private": true,
+        "private": false,
         "run_as_system": true
     }
 ]

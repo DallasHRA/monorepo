@@ -79,7 +79,7 @@ exports = async function(changeEvent) {
     };
     console.log("OPTIONS:", JSON.stringify(options));
 
-    const response = await fetch('https://script.googleapis.com/v1/scripts/AKfycby_ZhKwMR79FRdcSyS8rZrpbZnXa49HuxcGTOe8LkpH7OCm8535RMfmhH0XAIQcaoBycw:run', options);
+    const response = await fetch('https://script.googleapis.com/v1/scripts/AKfycbx2q0MqFMOJd2j-CacgFm43mtR32mKO8UTDeytJNTJ7888UkAOt_Gn7kW9OI1at0A:run', options);
     return response.json();
   }
 
