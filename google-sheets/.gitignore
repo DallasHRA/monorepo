@@ -1,3 +1,5 @@
 experiment/
 dist/
+coverage/
+.DS_Store
 .env
