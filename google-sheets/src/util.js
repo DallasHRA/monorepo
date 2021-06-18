@@ -110,6 +110,27 @@ function friendlyFormatNumbers(sheet, header, headerRows) {
     .map(n => formatPhoneNumber(domesticFormatStrategy, n[0])));
 }
 
+function getRowByPhoneNumber(sheet, keys, phoneNumber) {
+  return sheet.getDataRange().getValues()
+    .map(row => row[keys.indexOf('number')])
+    .map(number => utils.twilioFormatPhoneNumber(number))
+    .indexOf(phoneNumber) + 1;
+}
+
+function getRowById(sheet, keys, id) {
+  console.log(keys.indexOf('_id'));
+  const data = sheet.getDataRange().getValues();
+  console.log('data', data);
+  const row = data.map(row => row[(keys.indexOf('_id'))]);
+  console.log('row', row);
+  const rowNum = row.indexOf(id);
+  return rowNum + 1;
+}
+
+function getIdFromNumber(sheet, keys, number) {
+  return data[util.getRowByPhoneNumber(sheet, keys, number) - 1][keys['_id']];
+}
+
 module.exports = {
   addDataValidation,
   buildValidation,
@@ -119,5 +140,8 @@ module.exports = {
   domesticFormatPhoneNumber: formatPhoneNumber.bind(null, domesticFormatStrategy),
   convertRunnerObjectToValueArray,
   makeDataArray,
-  friendlyFormatNumbers
+  friendlyFormatNumbers,
+  getRowByPhoneNumber,
+  getRowById,
+  getIdFromNumber
 }

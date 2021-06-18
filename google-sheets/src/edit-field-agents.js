@@ -90,32 +90,4 @@ global.addFieldRunners = function(operation, id, runners) {
   
   OPERATIONS[operation.toLowerCase()](sheet, keys, id, runners);
   return;
-  if (operation.toLowerCase() === 'delete') {
-    onDelete(sheet, key, id);
-    return;
-  } else if (operation.toLowerCase() === 'update') {
-    onUpdate(sheet, key, id, runners);
-    return;
-  }
-  var data = range.getValues().splice(2);
-
-  Logger.log(JSON.stringify(runners));
-
-  const inputData = runners
-    .map(runner => makeArrayFromData(key, runner))
-    .map(runner => {
-      let editAction = 'update';
-      const row = getMatchingRowById(data, runner[0]) + headerRows + 1;
-      if (row < headerRows + 1) {
-        sheet.appendRow(runner);
-      } else {
-        Logger.log(runner);
-        sheet.getRange(row, 1, 1, key.length).setValues([runner]);
-      }
-      return runner;
-    });
-
-  Logger.log(JSON.stringify({ inputData }));
-
-  return JSON.stringify({'api-key': REALM_API_KEY, inputData});
 }
