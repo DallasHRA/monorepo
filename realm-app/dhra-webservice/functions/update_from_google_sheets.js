@@ -2,10 +2,11 @@ exports = async function(arg) {
   const data = arg.data;
   console.log(arg);
   
-  let collection = context.services
+  const db = context.services
     .get("mongodb-atlas")
-    .db("DHRA_PROXY")
-    .collection("fieldAgents");
+    .db("DHRA_PROXY");
+    
+  let collection = db.collection("fieldAgents");
   
   async function updateRunner(runner) {
     const query = {'_id': BSON.ObjectId(runner['_id'])};
@@ -15,8 +16,17 @@ exports = async function(arg) {
     return runner;
   }
   
+  const defaultRunner = {
+    state: "OFF_DUTY",
+    active: true,
+    lastSession: (new Date(0)),
+    default: false,
+    schedule: [false, false, false, false, false, false, false],
+    timeZone: "America/Chicago",
+  };
+  
   async function insertRunner(runner) {
-    const insert = Object.assign({}, runner, {state: "OFF_DUTY", active: true, lastSession: 0, default: false});
+    const insert = Object.assign({}, defaultRunner, runner);
     delete insert['_id'];
     const result = (await collection.insertOne(insert));
     insert['_id'] = result.insertedId.toString();

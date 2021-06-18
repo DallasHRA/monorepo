@@ -1,27 +1,46 @@
+function formatData(key, ssData) {
+  switch(key) {
+  case 'number':
+    return formatPhoneNumber(twilioFormatStrategy, ssData);
+  case 'state':
+    return (ssData === '' || !ssData) ? undefined : ssData;
+  case 'default':
+    return (ssData !== true) ? false : true;
+  case 'lastSession':
+    return (ssData == '' || !ssData) ? undefined : ssData;
+  case 'active':
+    return (ssData === '') ? undefined : ssData;
+  default:
+    return ssData;
+  }
+}
+
 function makeDataArray(header, headerRows, data) {
   return data.splice(headerRows)
     .map(arr => arr.reduce((acc, cur, i) => {
-      if (i < header.length)
-        acc[header[i]] = (header[i] === 'number') ? formatPhoneNumber(twilioFormatStrategy, cur) : cur;
+      if (i < header.length) {
+        const data  = formatData(header[i], cur);
+        if (data !== undefined) acc[header[i]] = data;
+      }
       return acc;
-    }, {}))
+    }, {}));
 }
 
 function convertRunnerObjectToValueArray(header, runner) {
   return header.map(key => {
     if (!runner[key]) {
-      return "";
+      return '';
     } else if (key == 'number') {
-      return formatPhoneNumber(domesticFormatStrategy, runner[key])
+      return formatPhoneNumber(domesticFormatStrategy, runner[key]);
     } else {
-      return runner[key]
+      return runner[key];
     }
   });
 }
 
 function twilioFormatStrategy(digits) {
   digits = digits.toString();
-  let formatted = ''
+  let formatted = '';
   if (digits.length === 10) {
     formatted = '1' + digits;
   }
@@ -30,13 +49,13 @@ function twilioFormatStrategy(digits) {
 }
 
 function formatPhoneNumber(strategy, phoneNumber) {
-  digitregex = /\d*/g;
-  if (phoneNumber.toString() === '') {
+  const digitregex = /\d*/g;
+  if (!phoneNumber || phoneNumber.toString() === '') {
     return phoneNumber;
   }
   let digits = phoneNumber.toString().toLowerCase().match(digitregex).join('');
   if (digits >= 10) {
-    return strategy(digits)
+    return strategy(digits);
   }
   return digits;
 }
@@ -44,7 +63,7 @@ function formatPhoneNumber(strategy, phoneNumber) {
 function domesticFormatStrategy(digits) {
   const regex = /1?(\d{3})(\d{3})(\d{4})/;
   const arr = digits.match(regex).splice(1,3);
-  return `(${arr[0]}) ${arr[1]}-${arr[2]}`
+  return `(${arr[0]}) ${arr[1]}-${arr[2]}`;
 }
 
 function getRelevantRows(e, data, headerRows) {

@@ -26,6 +26,13 @@ function getMatchingRowById(rows, runnerId) {
   }, -1);
 }
 
+function getRowByPhoneNumber(sheet, keys, phoneNumber) {
+  return sheet.getDataRange().getValues()
+    .map(row => row[keys.indexOf('number')])
+    .map(number => utils.twilioFormatPhoneNumber(number))
+    .indexOf(phoneNumber) + 1;
+}
+
 function getRowById(sheet, keys, id) {
   console.log(keys.indexOf('_id'));
   const data = sheet.getDataRange().getValues();
@@ -40,6 +47,38 @@ function onDelete(sheet, keys, id) {
   sheet.deleteRow(getRowById(sheet, keys, id));
 }
 
+function onReplace(sheet, keys, id, runner) {
+  console.log('REPLACE:', id, runner);
+  onUpdate(sheet, keys, id, runner);
+  return;
+}
+
+function onUpdate(sheet, keys, id, runner) {
+  const values = makeArrayFromData(keys, runner);
+  const rowNum = getRowById(sheet, keys, id);
+  console.log('NEW STUFF:', rowNum, values.length, JSON.stringify(values), JSON.stringify(keys));
+  sheet.getRange(rowNum, 1, 1, keys.length).setValues([values]);
+}
+
+function onInsert(sheet, keys, id, runner) {
+  const values = makeArrayFromData(keys, runner);
+  const rowNum = getRowByPhoneNumber(sheet, keys, runner.number);
+  if (rowNum <= 0) {
+    sheet.appendRow(values);
+  } else {
+    sheet.getRange(rowNum, 1, 1, keys.length).setValues([values]);
+  }
+  console.log('INSERT:', id, runner);
+  return;
+}
+
+const OPERATIONS = {
+  'delete': onDelete,
+  'update': onUpdate,
+  'replace': onReplace,
+  'insert': onInsert
+};
+
 global.addFieldRunners = function(operation, id, runners) {
   Logger.log(arguments);
   Logger.log(id);
@@ -47,10 +86,15 @@ global.addFieldRunners = function(operation, id, runners) {
   var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
   var sheet = spreadsheet.getSheetByName('FieldAgents');
   var range = sheet.getDataRange();
-  var key = range.getValues()[0];
+  var keys = range.getValues()[0];
   
+  OPERATIONS[operation.toLowerCase()](sheet, keys, id, runners);
+  return;
   if (operation.toLowerCase() === 'delete') {
     onDelete(sheet, key, id);
+    return;
+  } else if (operation.toLowerCase() === 'update') {
+    onUpdate(sheet, key, id, runners);
     return;
   }
   var data = range.getValues().splice(2);
